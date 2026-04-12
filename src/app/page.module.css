@@ -1,0 +1,208 @@
+/* ─── Page shell ──────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial glow behind hero */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 40%,
+    rgba(58, 122, 90, 0.06) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ─── Hero ────────────────────────────────────────────────── */
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-20) var(--space-6);
+  width: 100%;
+}
+
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-6);
+  max-width: 680px;
+  animation: fadeInUp 0.6s ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Logo mark ─────────────────────────────────────────── */
+.logoMark {
+  margin-bottom: var(--space-2);
+  line-height: 1;
+}
+
+/* ─── Headline ──────────────────────────────────────────── */
+.headline {
+  font-size: var(--text-2xl);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ─── Subline ────────────────────────────────────────────── */
+.sub {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+/* Inline code */
+.codeInline {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--live-accent);
+  background-color: var(--live-accent-bg);
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(58, 122, 90, 0.25);
+}
+
+/* ─── CTA group ─────────────────────────────────────────── */
+.ctaGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Primary CTA */
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--live-accent);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  border-radius: var(--radius-lg);
+  transition:
+    background-color var(--transition-base),
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  box-shadow: 0 0 0 0 var(--focus-ring);
+}
+
+.ctaPrimary:hover {
+  background-color: var(--live-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-accent);
+}
+
+.ctaPrimary:active {
+  transform: translateY(0);
+}
+
+/* Secondary CTA */
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  font-weight: 400;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base),
+    background-color var(--transition-base),
+    transform var(--transition-base);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+}
+
+.ctaSecondary:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background-color: var(--surface-raised);
+  transform: translateY(-1px);
+}
+
+.ctaSecondary:active {
+  transform: translateY(0);
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+.footer {
+  padding: var(--space-6);
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+.footerText {
+  font-size: var(--text-sm);
+  color: var(--text-ghost);
+  font-family: var(--font-mono);
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .headline {
+    font-size: var(--text-xl);
+  }
+
+  .sub {
+    font-size: var(--text-base);
+  }
+
+  .ctaGroup {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ctaPrimary,
+  .ctaSecondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ─── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .heroInner {
+    animation: none;
+  }
+
+  .ctaPrimary:hover,
+  .ctaSecondary:hover {
+    transform: none;
+  }
+}

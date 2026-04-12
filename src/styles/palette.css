@@ -1,0 +1,57 @@
+/* ─── Color palette ──────────────────────────────────────── */
+
+:root {
+  /* Background */
+  --bg:               #0d0d0f;
+
+  /* Surfaces */
+  --surface:          #141418;
+  --surface-raised:   #1a1a22;
+  --surface-overlay:  #20202a;
+
+  /* Borders */
+  --border:           #222230;
+  --border-subtle:    #1a1a22;
+  --border-strong:    #2e2e42;
+
+  /* Text */
+  --text-primary:     #f0ede8;
+  --text-secondary:   #c0bdb8;
+  --text-muted:       #8a8aaa;
+  --text-ghost:       #5a5a6a;
+
+  /* Live / Accent */
+  --live-accent:      #3a7a5a;
+  --live-accent-hover:#4a9a6e;
+  --live-accent-bg:   #1a2a20;
+  --live-accent-dim:  #2a5a42;
+
+  /* Tag backgrounds */
+  --tag-bg-green:     #1a2a20;
+  --tag-text-green:   #4a9a6e;
+
+  --tag-bg-yellow:    #2a2010;
+  --tag-text-yellow:  #c0a040;
+
+  --tag-bg-blue:      #101a2a;
+  --tag-text-blue:    #4080c0;
+
+  --tag-bg-purple:    #1a102a;
+  --tag-text-purple:  #8060c0;
+
+  --tag-bg-red:       #2a1010;
+  --tag-text-red:     #c04040;
+
+  --tag-bg-orange:    #2a1a10;
+  --tag-text-orange:  #c06030;
+
+  /* Interactive states */
+  --focus-ring:       rgba(58, 122, 90, 0.4);
+  --overlay-scrim:    rgba(13, 13, 15, 0.8);
+
+  /* Shadows */
+  --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md:        0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg:        0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-accent:    0 4px 24px rgba(58, 122, 90, 0.15);
+}
