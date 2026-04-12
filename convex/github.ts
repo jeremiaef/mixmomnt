@@ -1,10 +1,10 @@
-import { mutation, query } from "./_generated/server";
+import { action, query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 const GitHubApiBase = "https://api.github.com";
 
-export const fetchRepos = mutation({
+export const fetchRepos = action({
   args: {},
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
@@ -64,7 +64,7 @@ export const fetchRepos = mutation({
   },
 });
 
-export const fetchReadme = mutation({
+export const fetchReadme = action({
   args: { repoFullName: v.string() },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -106,7 +106,7 @@ export const fetchReadme = mutation({
     }
 
     // README content is base64-encoded with newlines stripped
-    return atob(data.content.replace(/\n/g, ""));
+    return Buffer.from(data.content.replace(/\n/g, ""), 'base64').toString('utf-8');
   },
 });
 
@@ -148,8 +148,5 @@ interface GitHubRepo {
   full_name: string;
   description: string | null;
   language: string | null;
-  html_url: string;
-  stargazers_count: number;
-  forks_count: number;
   pushed_at: string | null;
 }

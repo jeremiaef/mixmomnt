@@ -28,7 +28,7 @@ export default defineSchema({
     showStars: v.boolean(),
     createdAt: v.number(),
   })
-    .index("by_username", ["username"])
+    .index("by_username", ["username"]).unique()
     .index("by_githubId", ["githubId"])
     .index("by_email", ["email", "_creationTime"]),
 
@@ -61,4 +61,4 @@ export default defineSchema({
     visitorId: v.string(),
     createdAt: v.number(),
   }).index("by_projectId", ["projectId"]),
-});
+}).named('mixmomnt');
