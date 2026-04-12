@@ -34,7 +34,7 @@ export function TabBar({ defaultTab = 'about', onTabChange }: TabBarProps) {
             styles.tab,
             activeTab === tab.id ? styles.tabActive : '',
           ].join(' ')}
-          onClick={() => handleTabClick(tab)}
+          onClick={() => handleTabClick(tab.id)}
         >
           {tab.label}
         </button>

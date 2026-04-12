@@ -8,7 +8,7 @@ import styles from './ProjectTabContent.module.css';
 
 interface ProjectTabContentProps {
   readme: string;
-  liveUrl: string | null;
+  liveUrl?: string | null;
   repoName: string;
 }
 

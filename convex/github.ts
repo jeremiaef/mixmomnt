@@ -1,10 +1,10 @@
-import { action, query, mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 const GitHubApiBase = "https://api.github.com";
 
-export const fetchRepos = action({
+export const fetchRepos = mutation({
   args: {},
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
@@ -56,15 +56,15 @@ export const fetchRepos = action({
     return repos.map((repo) => ({
       repoName: repo.name,
       repoFullName: repo.full_name,
-      description: repo.description || '',
-      liveUrl: repo.homepage || '',
-      language: repo.language || '',
+      description: repo.description || "",
+      liveUrl: repo.homepage || "",
+      language: repo.language || "",
       lastCommitDate: repo.pushed_at ? new Date(repo.pushed_at).getTime() : null,
     }));
   },
 });
 
-export const fetchReadme = action({
+export const fetchReadme = mutation({
   args: { repoFullName: v.string() },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -97,7 +97,7 @@ export const fetchReadme = action({
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch README: ${response.status}`);
+      return null;
     }
 
     const data = (await response.json()) as { content?: string };
@@ -106,7 +106,9 @@ export const fetchReadme = action({
     }
 
     // README content is base64-encoded with newlines stripped
-    return Buffer.from(data.content.replace(/\n/g, ""), 'base64').toString('utf-8');
+    return Buffer.from(data.content.replace(/\n/g, ""), "base64").toString(
+      "utf-8"
+    );
   },
 });
 
@@ -147,6 +149,7 @@ interface GitHubRepo {
   name: string;
   full_name: string;
   description: string | null;
+  homepage: string | null;
   language: string | null;
   pushed_at: string | null;
 }

@@ -10,7 +10,7 @@ export async function GET(
   // TODO: Fetch from Convex — displayName, tagline, avatarUrl, projectCount
   const displayName = username;
   const tagline = 'vibecoder';
-  const projectCount = 0;
+  const projectCount: number = 0;
   const avatarUrl = null;
 
   return new ImageResponse(
