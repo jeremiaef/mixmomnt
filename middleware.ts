@@ -32,27 +32,21 @@ export function middleware(req: NextRequest) {
   }
 
   // Production subdomain routing
-  const PROTECTED_DOMAINS = new Set(["mixmomnt.com", "app.mixmomnt.com"]);
-
   // Strip port if present for production hostnames
   const cleanHost = hostname.split(":")[0];
   // e.g. "alice.mixmomnt.com" → ["alice", "mixmomnt.com"]
   const parts = cleanHost.split(".");
+  const baseDomain = parts.slice(-2).join(".");
 
-  if (parts.length >= 2) {
-    const baseDomain = parts.slice(-2).join(".");
-    if (PROTECTED_DOMAINS.has(baseDomain)) {
-      // Top-level domain — pass through
-      return NextResponse.next();
-    }
-    // Unknown subdomain — treat first segment as username
-    const username = parts[0];
-    const url = req.nextUrl.clone();
-    url.pathname = `/${username}${pathname === "/" ? "" : pathname}`;
-    return NextResponse.rewrite(url);
+  // If the hostname IS the bare apex domain, pass through unchanged
+  if (cleanHost === baseDomain) {
+    return NextResponse.next();
   }
-
-  return NextResponse.next();
+  // Any other subdomain is a portfolio username — rewrite to /[username]
+  const username = parts[0];
+  const url = req.nextUrl.clone();
+  url.pathname = `/${username}${pathname === "/" ? "" : pathname}`;
+  return NextResponse.rewrite(url);
 }
 
 export const config = {
