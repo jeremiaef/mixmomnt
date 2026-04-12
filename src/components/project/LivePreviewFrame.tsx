@@ -47,14 +47,23 @@ export function LivePreviewFrame({ liveUrl, repoName }: LivePreviewFrameProps) {
             <p className={styles.fallbackSubtitle}>
               The site may not allow embedding, or is temporarily unavailable.
             </p>
-            <a
-              href={liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.visitButton}
-            >
-              Visit Site
-            </a>
+            <div className={styles.fallbackActions}>
+              <button
+                className={styles.retryButton}
+                onClick={handleReload}
+                type="button"
+              >
+                Try again
+              </button>
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.visitButton}
+              >
+                Visit Site
+              </a>
+            </div>
           </div>
         ) : (
           <iframe

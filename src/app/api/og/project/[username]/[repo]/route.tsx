@@ -3,7 +3,7 @@ import { ImageResponse } from '@vercel/og';
 export const runtime = 'edge';
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ username: string; repo: string }> }
 ) {
   const { username, repo } = await params;
@@ -17,10 +17,12 @@ export async function GET(
         {/* Top: project name + description */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '28px' }}>📦</span>
+            <span style={{ fontSize: '28px', color: '#3a7a5a' }}>◆</span>
             <span style={{ fontSize: '36px', fontWeight: 700, color: '#f0ede8' }}>{repo}</span>
           </div>
-          <p style={{ fontSize: '18px', color: '#c0bdb8', lineHeight: 1.5 }}>{description}</p>
+          {description && (
+            <p style={{ fontSize: '18px', color: '#c0bdb8', lineHeight: 1.5 }}>{description}</p>
+          )}
           <span style={{ background: '#1a1a22', border: '1px solid #222230', borderRadius: '999px', padding: '4px 16px', fontSize: '14px', color: '#8a8aaa', alignSelf: 'flex-start' }}>{language}</span>
         </div>
         {/* Bottom: publisher + brand */}

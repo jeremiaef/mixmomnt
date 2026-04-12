@@ -13,8 +13,10 @@ export default function Badge({
   label,
   className,
 }: BadgeProps) {
+  const classes = [styles.badge, styles[variant]];
+  if (className) classes.push(className);
   return (
-    <span className={[styles.badge, styles[variant], className ?? ''].join(' ')}>
+    <span className={classes.join(' ')}>
       {variant === 'live' && (
         <span className={styles.liveDot} aria-hidden="true" />
       )}

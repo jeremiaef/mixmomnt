@@ -104,8 +104,34 @@
   max-width: 320px;
 }
 
-.visitButton {
+.fallbackActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin-top: var(--space-2);
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.retryButton:hover {
+  border-color: var(--text-muted);
+  color: var(--text-secondary);
+}
+
+.visitButton {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);

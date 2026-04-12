@@ -3,7 +3,7 @@ import { ImageResponse } from '@vercel/og';
 export const runtime = 'edge';
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ username: string }> }
 ) {
   const { username } = await params;
@@ -30,7 +30,7 @@ export async function GET(
         {/* Bottom: stats + brand */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ background: '#141418', border: '1px solid #222230', borderRadius: '999px', padding: '8px 20px', fontSize: '16px', color: '#8a8aaa' }}>
-            {(projectCount as number)} project{(projectCount as number) !== 1 ? 's' : ''}
+            {projectCount} project{projectCount !== 1 ? 's' : ''}
           </div>
           <span style={{ fontSize: '16px', color: '#5a5a6a' }}>built with ✦ mixmomnt</span>
         </div>
