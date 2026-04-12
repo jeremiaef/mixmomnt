@@ -67,5 +67,10 @@ export function isPortfolioSubdomain(hostname: string): boolean {
   // localhost / unknown TLD: single non-reserved segment = portfolio subdomain
   // e.g. "foo.localhost:3000" -> first="foo", portfolio subdomain = true
   // "app.localhost:3000" -> first="app", portfolio subdomain = false
-  return first !== "app" && first !== "localhost";
+  const isLocalhost = first === "localhost" || second === "localhost";
+  if (isLocalhost) {
+    return first !== "app" && first !== "localhost";
+  }
+
+  return first !== "app" && first !== "www";
 }

@@ -56,12 +56,10 @@ export const fetchRepos = mutation({
     return repos.map((repo) => ({
       repoName: repo.name,
       repoFullName: repo.full_name,
-      description: repo.description ?? undefined,
-      language: repo.language ?? undefined,
-      htmlUrl: repo.html_url,
-      stargazersCount: repo.stargazers_count,
-      forksCount: repo.forks_count,
-      pushedAt: repo.pushed_at,
+      description: repo.description || '',
+      liveUrl: repo.homepage || '',
+      language: repo.language || '',
+      lastCommitDate: repo.pushed_at ? new Date(repo.pushed_at).getTime() : null,
     }));
   },
 });

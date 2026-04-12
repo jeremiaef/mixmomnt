@@ -29,6 +29,7 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_username", ["username"])
+    .index("by_githubId", ["githubId"])
     .index("by_email", ["email", "_creationTime"]),
 
   projects: defineTable({

@@ -16,7 +16,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
     async afterUserCreatedOrUpdated(ctx, { userId, type, provider }) {
       if (type !== "oauth") return;
 
-      // Get the GitHub username from the authAccounts entry
+      // Get the GitHub account entry from authAccounts
       const account = await ctx.db
         .query("authAccounts")
         .withIndex("userIdAndProvider", (q) =>
@@ -24,13 +24,18 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         )
         .first();
 
+      const identity = await ctx.auth.getUserIdentity();
+
       const username =
         (account?.providerAccountId as string | undefined) ??
-        (await ctx.auth.getUserIdentity()).nickname ??
+        identity?.nickname ??
         "user";
 
       await ctx.db.patch(userId, {
         username,
+        githubId: account?.providerAccountId as string ?? "",
+        avatarUrl: identity?.pictureUrl ?? "",
+        displayName: identity?.fullName ?? username,
         showStars: false,
         createdAt: Date.now(),
       });
