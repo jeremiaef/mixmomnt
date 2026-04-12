@@ -1,0 +1,117 @@
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-8);
+  align-items: start;
+  padding: var(--space-12) var(--space-8);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ── Identity block (left column) ───────────────────────── */
+.identityBlock {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.avatar {
+  flex-shrink: 0;
+  margin-top: var(--space-1);
+}
+
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.displayName {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.username {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
+}
+
+.tagline {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-top: var(--space-1);
+}
+
+/* ── Vibe badges ──────────────────────────────────────── */
+.vibeBadges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.vibeBadge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.vibeCount {
+  font-weight: 600;
+  color: var(--live-accent);
+  font-size: var(--text-sm);
+}
+
+.vibeLabel {
+  color: var(--text-muted);
+}
+
+/* ── Bio card (right column) ──────────────────────────── */
+.bioCard {
+  max-width: 280px;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-1);
+}
+
+.bioText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* ── Mobile: stack vertically ──────────────────────────── */
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: var(--space-8) var(--space-5);
+    gap: var(--space-6);
+  }
+
+  .identityBlock {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .bioCard {
+    max-width: 100%;
+  }
+}
