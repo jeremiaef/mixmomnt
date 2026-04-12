@@ -37,6 +37,7 @@ export async function generateMetadata(
       title,
       description: `${repo} by ${username}`,
       type: 'article',
+      images: [{ url: `/api/og/project/${username}/${repo}`, width: 1200, height: 630 }],
     },
   };
 }

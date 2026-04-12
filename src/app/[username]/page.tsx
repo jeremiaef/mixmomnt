@@ -106,8 +106,9 @@ export async function generateMetadata(
     description: `${username}'s portfolio on mixmomnt. Built from the things they ship.`,
     openGraph: {
       title,
-      description: `${username}'s portfolio on mixmomnt.`,
+      description: `${username}'s portfolio on mixmomnt. Built from the things they ship.`,
       type: 'profile',
+      images: [{ url: `/api/og/profile/${username}`, width: 1200, height: 630 }],
     },
   };
 }
