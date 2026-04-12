@@ -1,0 +1,47 @@
+/* ─── Tab bar container ───────────────────────────────────── */
+
+.tabBar {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-6);
+}
+
+/* ─── Individual tab ───────────────────────────────────────── */
+
+.tab {
+  position: relative;
+  padding: var(--space-3) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.tab:hover {
+  color: var(--text-secondary);
+  background-color: var(--surface-raised);
+}
+
+/* Active state */
+.tabActive {
+  color: var(--text-primary);
+  background-color: transparent;
+}
+
+/* Bottom accent bar for active tab */
+.tabActive::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--live-accent);
+  border-radius: 2px 2px 0 0;
+}

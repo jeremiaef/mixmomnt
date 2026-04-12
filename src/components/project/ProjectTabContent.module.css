@@ -1,0 +1,19 @@
+/* ─── Wrapper ─────────────────────────────────────────────── */
+
+.wrapper {
+  width: 100%;
+}
+
+/* ─── Content area ────────────────────────────────────────── */
+
+.content {
+  min-height: 300px;
+}
+
+/* ─── Empty state ─────────────────────────────────────────── */
+
+.empty {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  font-style: italic;
+}

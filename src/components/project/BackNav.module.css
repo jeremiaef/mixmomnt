@@ -1,0 +1,27 @@
+/* ─── Nav container ───────────────────────────────────────── */
+
+.nav {
+  margin-bottom: var(--space-8);
+}
+
+/* ─── Link ────────────────────────────────────────────────── */
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--text-primary);
+}
+
+.arrow {
+  color: var(--live-accent);
+  font-size: var(--text-md);
+  line-height: 1;
+}
