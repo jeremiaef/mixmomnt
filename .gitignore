@@ -51,3 +51,4 @@ next-env.d.ts
 # Git worktrees
 .worktrees/
 worktrees/
+.env*.local
