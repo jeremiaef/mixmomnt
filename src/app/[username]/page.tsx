@@ -1,68 +1,12 @@
 import type { Metadata } from 'next';
+import { fetchQuery } from 'convex/nextjs';
+import { api } from '@/convex/_generated/api';
 import HeroSection from '@/components/profile/HeroSection';
 import ProjectGrid from '@/components/profile/ProjectGrid';
 import SocialLinks from '@/components/profile/SocialLinks';
 import EmptyState from '@/components/profile/EmptyState';
-import ChatDesignerToggle from '@/components/chat/ChatDesignerToggle';
+import ProfileAuthWrapper from './ProfileAuthWrapper';
 import styles from './page.module.css';
-
-// ── Mock data ─────────────────────────────────────────────────────────────────
-// Used until Convex is deployed. Swap getProfile call in the async function
-// below to pull real data once the backend is connected.
-
-const MOCK_PROJECTS = [
-  {
-    repoName: 'vibe-shell',
-    description:
-      'AI-powered terminal that learns your workflow and suggests the next command before you type it.',
-    language: 'Rust',
-    hasLiveSite: true,
-    previewGradient: 'linear-gradient(135deg, #0a1a12 0%, #1a3a2a 100%)',
-    emoji: '🖥',
-  },
-  {
-    repoName: 'dotsync',
-    description:
-      'Sync your dotfiles across machines with a single config file. Git-backed, encrypted, and fast.',
-    language: 'Go',
-    hasLiveSite: true,
-    previewGradient: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%)',
-    emoji: '🔗',
-  },
-  {
-    repoName: 'mood-radio',
-    description:
-      'Ambient music generator that adapts to your typing cadence. Built with the Web Audio API.',
-    language: 'TypeScript',
-    hasLiveSite: false,
-    previewGradient: 'linear-gradient(135deg, #1a0a1a 0%, #2a1a2a 100%)',
-    emoji: '🎧',
-  },
-  {
-    repoName: 'terminal-paint',
-    description: 'Draw in your terminal with ASCII art and ANSI colors. Exports to SVG.',
-    language: 'Python',
-    hasLiveSite: true,
-    previewGradient: 'linear-gradient(135deg, #1a1a0a 0%, #2a2a1a 100%)',
-    emoji: '🎨',
-  },
-  {
-    repoName: 'logfire',
-    description: 'Real-time log explorer with regex search, live tail, and alerting.',
-    language: 'TypeScript',
-    hasLiveSite: true,
-    previewGradient: 'linear-gradient(135deg, #1a0a0a 0%, #3a1a1a 100%)',
-    emoji: '🔥',
-  },
-  {
-    repoName: 'ship-tracker',
-    description: 'Track container ships in real time. Uses AIS data and renders on a live map.',
-    language: 'JavaScript',
-    hasLiveSite: false,
-    previewGradient: 'linear-gradient(135deg, #0a1a2a 0%, #0a2a4a 100%)',
-    emoji: '🚢',
-  },
-];
 
 const MOCK_SOCIAL_LINKS = [
   {
@@ -122,25 +66,38 @@ export default async function ProfilePage(
   const { username } = await props.params;
 
   // ── Data fetching ──────────────────────────────────────────────────────────
-  // TODO: Replace with real Convex query when backend is connected.
-  //
-  //   const profile = await convex.query(api.profile.getProfile, { username });
-  //
-  // The shape must match the HeroSectionProps['profile'] interface.
-  // See: src/components/profile/HeroSection.tsx
+  // fetchQuery uses NEXT_PUBLIC_CONVEX_URL automatically.
+  // Falls back to null when env var isn't set (e.g., local dev without Convex deployed).
+  const profileData =
+    process.env.NEXT_PUBLIC_CONVEX_URL
+      ? await fetchQuery(api.github.getProfile, { username })
+      : null;
 
-  const profile = {
-    displayName: username,
-    username,
-    tagline: 'building in public',
-    bio: 'Full-stack dev. Obsessed with developer tooling and weird side projects. Ship fast, break things, iterate.',
-    avatarUrl: null,
-    projectCount: MOCK_PROJECTS.length,
-    liveSiteCount: MOCK_PROJECTS.filter((p) => p.hasLiveSite).length,
-    topLanguages: ['TypeScript', 'Rust', 'Go'],
-  };
+  const projectList = profileData?.projects ?? [];
 
-  const hasProjects = MOCK_PROJECTS.length > 0;
+  const profile = profileData
+    ? {
+        displayName: profileData.user?.displayName ?? profileData.user?.name ?? username,
+        username,
+        tagline: profileData.user?.tagline ?? '',
+        bio: profileData.user?.bio ?? '',
+        avatarUrl: profileData.user?.avatarUrl ?? null,
+        projectCount: projectList.length,
+        liveSiteCount: projectList.filter((p: { liveUrl?: string | null }) => Boolean(p.liveUrl)).length,
+        topLanguages: [],
+      }
+    : {
+        displayName: username,
+        username,
+        tagline: '',
+        bio: '',
+        avatarUrl: null,
+        projectCount: 0,
+        liveSiteCount: 0,
+        topLanguages: [],
+      };
+
+  const hasProjects = projectList.length > 0;
 
   return (
     <>
@@ -148,16 +105,23 @@ export default async function ProfilePage(
         {hasProjects ? (
           <>
             <HeroSection profile={profile} />
-            <ProjectGrid projects={MOCK_PROJECTS} />
+            <ProjectGrid
+              projects={projectList.map((p: { repoName?: string; description?: string; language?: string; liveUrl?: string | null }) => ({
+                repoName: p.repoName ?? '',
+                description: p.description ?? '',
+                language: p.language ?? '',
+                hasLiveSite: Boolean(p.liveUrl),
+                previewGradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                emoji: '🚀',
+              }))}
+            />
             <SocialLinks links={MOCK_SOCIAL_LINKS} />
           </>
         ) : (
           <EmptyState username={username} />
         )}
       </main>
-      {/* Chat Designer — shown when viewing own profile.
-          isOwnProfile will be: username === authenticatedUsername (wired via Convex auth in future) */}
-      <ChatDesignerToggle isOwnProfile={true} />
+      <ProfileAuthWrapper username={username} />
     </>
   );
 }

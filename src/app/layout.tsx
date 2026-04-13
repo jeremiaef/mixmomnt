@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
 import './globals.css';
-import ConvexClientProvider from '@/components/ConvexClientProvider';
 
 export const metadata: Metadata = {
   title: 'mixmomnt — where vibecoders ship',
@@ -35,7 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexAuthNextjsServerProvider>{children}</ConvexAuthNextjsServerProvider>
       </body>
     </html>
   );

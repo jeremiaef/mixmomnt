@@ -153,3 +153,15 @@ interface GitHubRepo {
   language: string | null;
   pushed_at: string | null;
 }
+
+// ─── Current user ───────────────────────────────────────────────────────────────
+
+export const getCurrentUsername = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+    const user = await ctx.db.get(userId);
+    return user?.username ?? null;
+  },
+});

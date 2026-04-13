@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { convexAuthNextjsMiddleware } from "@convex-dev/auth/nextjs/server";
 
 /**
- * Middleware for wildcard subdomain routing.
+ * Middleware for wildcard subdomain routing + Convex Auth.
  *
- * - `mixmomnt.com` and `app.mixmomnt.com` pass through unchanged.
- * - Any other subdomain (e.g. `alice.mixmomnt.com`) is rewritten to `/[username]`.
- * - `username.localhost:3000` is rewritten to `/[username]` for local development.
- * - `/app` routes are never rewritten.
+ * Convex Auth handles:
+ * - /api/auth POST (signIn/signOut proxy)
+ * - /api/auth GET (OAuth callback)
+ *
+ * Subdomain routing handles:
+ * - `alice.mixmomnt.com` → `/[username]`
  */
-export function middleware(req: NextRequest) {
+export const combinedMiddleware = convexAuthNextjsMiddleware(subdomainRouter);
+
+function subdomainRouter(req: NextRequest) {
   const hostname = req.headers.get("host") ?? "";
   const pathname = req.nextUrl.pathname;
 
@@ -32,21 +37,26 @@ export function middleware(req: NextRequest) {
   }
 
   // Production subdomain routing
-  // Strip port if present for production hostnames
   const cleanHost = hostname.split(":")[0];
-  // e.g. "alice.mixmomnt.com" → ["alice", "mixmomnt.com"]
   const parts = cleanHost.split(".");
   const baseDomain = parts.slice(-2).join(".");
 
-  // If the hostname IS the bare apex domain, pass through unchanged
   if (cleanHost === baseDomain) {
     return NextResponse.next();
   }
-  // Any other subdomain is a portfolio username — rewrite to /[username]
   const username = parts[0];
   const url = req.nextUrl.clone();
   url.pathname = `/${username}${pathname === "/" ? "" : pathname}`;
   return NextResponse.rewrite(url);
+}
+
+export function middleware(
+  req: NextRequest,
+  ctx: { nextUrl: { basePath: string }; page: string }
+) {
+  // Next.js 15 passes (request, context) but the Convex auth middleware
+  // wraps it so we need to return the middleware result directly
+  return combinedMiddleware(req, ctx as never);
 }
 
 export const config = {
