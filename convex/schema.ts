@@ -56,6 +56,7 @@ export default defineSchema({
     changeHistory: v.array(v.string()),
     lastChangeAt: v.number(),
     presetId: v.optional(v.string()),
+    chatHistory: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 
   vibes: defineTable({
