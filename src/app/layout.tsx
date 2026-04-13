@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import ConvexClientProvider from '@/components/ConvexClientProvider';
 
 export const metadata: Metadata = {
   title: 'mixmomnt — where vibecoders ship',
@@ -33,7 +34,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+      </body>
     </html>
   );
 }
