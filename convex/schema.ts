@@ -53,6 +53,9 @@ export default defineSchema({
     ogDescription: v.optional(v.string()),
     ogImageUrl: v.optional(v.string()),
     updatedAt: v.number(),
+    changeHistory: v.array(v.string()),
+    lastChangeAt: v.number(),
+    presetId: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 
   vibes: defineTable({
