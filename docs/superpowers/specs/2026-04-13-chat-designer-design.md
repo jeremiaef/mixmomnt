@@ -1,231 +1,218 @@
 # Chat Designer — Design Specification
 
 **Date:** 2026-04-13
-**Status:** Draft for review
+**Status:** Approved
 
 ---
 
-## 1. Problem & Vision
+## 1. Overview
 
-The Chat Designer is what makes mixmomnt different from every other portfolio tool. Rather than a settings panel or drag-and-drop editor, the vibecoder talks to an AI in natural language and watches their portfolio update in real time. The experience should feel like collaborating with a designer who already knows the codebase — fast, fluid, and low-friction.
+The Chat Designer is how vibecoders customize their portfolio page without writing code. It lives alongside the live profile as a split-screen panel, making the editing experience immediate and reversible.
 
-The core loop: vibecoder types a request → AI applies changes → preview updates live → vibecoder approves or refines.
+**Key principles:**
+- Changes are visible in real-time — no mode switching, no preview pages
+- Every change is reversible — undo is always one tap or one word away
+- The AI is constrained to a clear surface — it cannot touch things outside its domain
+- First-time users start from a chosen preset, not a blank canvas
 
 ---
 
 ## 2. Layout
 
-### Screen Split (50/50)
+### Split Screen
 
-The screen divides into two equal panes:
+When the Chat Designer is active:
+- **Left (60%):** Profile page — fully interactive, updates live as changes are made
+- **Right (40%):** Chat panel — conversation history, input, controls
 
-- **Left — Profile Preview (60% width):** The vibecoder's portfolio rendered in a scrollable iframe-like container. Changes from the chat apply here in real time. The preview is always fully visible — never covered by the chat panel.
+The profile cards reflow from 3 columns to 2 columns to accommodate the narrower preview. This is acceptable — the vibecoder can still read every card.
 
-- **Right — Chat Panel (40% width):** Conversation thread, input field, and controls. Fixed width, full height, scrollable history.
+An "Edit Portfolio" button is visible on the profile page when the vibecoder is authenticated and viewing their own page. Clicking it opens the split-screen layout. A close button (×) collapses the panel and returns to full-profile view.
 
-A vertical 1px divider separates the two panes.
+The panel animates in from the right (slide + fade, ~250ms ease-out).
 
-### Panel Structure (right pane)
+### Mobile
 
-Top to bottom:
-1. **Header bar** — "Chat Designer" label + close button (×)
-2. **Message thread** — scrollable, latest at bottom
-3. **Status indicator** — shows AI thinking state when processing
-4. **Input area** — text input + send button
-
-### Responsive Behavior
-
-- **Mobile (< 768px):** Chat panel slides in from the bottom as a bottom sheet (60vh), profile becomes the full-width background. Dismissible by swipe-down or × button.
-- **Tablet:** Reduced split (profile 55% / chat 45%).
-- **Desktop:** Full 50/50 split.
+On screens below 768px, the chat panel takes the full screen when opened (overlay). Profile is not visible alongside the panel on mobile.
 
 ---
 
-## 3. Preset Flow
+## 3. First-Run Flow
 
-### Onboarding Sequence
+On first login (when no `profileDesign` record exists yet):
 
-1. Vibecoder signs in and connects GitHub.
-2. System generates the auto-draft from GitHub repos (top repos, suggested tagline from README content, a baseline layout preset applied).
-3. Vibecoder lands on their profile page with the draft applied.
-4. If the draft "feels right" — they start editing in chat immediately.
-5. If the draft "feels off" — a subtle prompt appears: "Not quite right? Pick a preset to start fresh."
+1. Vibecoder lands on their profile page with an "Edit Portfolio" prompt
+2. Clicking "Edit Portfolio" opens the **Preset Selector** (not the chat)
+3. Three presets shown as visual thumbnail cards:
 
-### Preset Selector
+| Preset | Vibe | Typography | Accent |
+|--------|------|------------|--------|
+| **Clean Dev** | Minimal, code-adjacent | System UI, tight | Neutral gray |
+| **Bold Maker** | Expressive, warmer | Larger type, generous spacing | Warm off-white |
+| **Dark Experimental** | High contrast, motion-forward | Standard | Near-black with bright accent |
 
-Three visual preset cards shown in a horizontal scroll or grid:
+4. Each thumbnail shows a live mini-preview of how the profile would look
+5. One click applies the preset and opens the chat
+6. No wizard — one step, then done
 
-- **Clean Dev** — minimal, code-adjacent, tight spacing
-- **Bold Maker** — larger type, warmer, more expressive
-- **Dark Experimental** — high contrast, maximal motion, sharp edges
-
-Clicking a preset re-skins the current profile with that style, replacing the auto-draft. Chat editing continues from there.
-
-### Why Not Preset-First?
-
-Asking a vibecoder to pick a visual style before seeing any content forces them to make a decision with no reference point. The GitHub auto-draft gives them something real to react to — which is far more useful context than a label like "Bold Maker."
+**Presets available anytime:** After initial setup, the vibecoder can say "show me other styles" in chat or access a settings menu to revisit presets.
 
 ---
 
-## 4. Conversation Flow
+## 4. Chat Interface
 
-### Message Types
+### Message Bubbles
 
-**User message** — right-aligned, dark surface background, light text.
+- **User messages:** Right-aligned, surface-raised background, primary text color
+- **AI messages:** Left-aligned, slightly darker surface, secondary text color. Includes an **Undo** button on each AI message.
+- **System messages** (e.g., "Applied: tagline updated to '…'"): Left-aligned, muted style, no Undo
 
-**AI message** — left-aligned, slightly lighter surface, includes avatar initial (✦). Supports inline markdown.
+### Typing Indicator
 
-**System message** — centered, muted text, no bubble. Used for "Design applied", "Preset changed", "No changes needed".
+While the AI is generating a response, show a three-dot pulse animation. Messages fade in from the bottom as they arrive.
 
-### Input Locking
+### Input
 
-While the AI is processing a request:
-- The input field is locked (disabled, not hidden).
-- A "Thinking..." indicator replaces the send button, with a sub-label showing what's happening: "tuning tagline...", "updating card layout...", "applying preset...".
-- The conversation thread remains fully visible and scrollable.
+- Text input at the bottom of the panel
+- Send button (or Enter key)
+- Keyboard accessible
+- Input clears on send
 
-### When Processing Completes
+### Empty State
 
-- Input re-enables.
-- If changes were applied: a system message "Applied" appears, preview updates.
-- If no changes needed: "Nothing to change — your portfolio already has that."
-- If an error occurred: "Couldn't do that — try rephrasing."
+When no conversation exists yet (preset applied, chat open, no history): show a prompt suggesting what to try, e.g.
+
+> "Try: 'make it more minimal', 'add my Twitter', or 'change the accent to blue'"
+
+---
+
+## 5. AI Editing Loop
+
+### Apply-Then-Explain
+
+When the vibecoder sends a message like *"make it more minimal"*:
+
+1. The AI parses the intent
+2. It applies the change immediately to the profile preview (left side)
+3. It sends an explanation message: "Done. I've simplified the layout — you now have a 2-column grid with cleaner card spacing."
+4. The change auto-saves to Convex (`profileDesign` table)
+
+No confirmation step before applying. The Undo button is always available if something goes wrong.
 
 ### Undo
 
-The last change is always undoable via a subtle "Undo" text link that appears below the AI's response. Only one level of undo (last change only). After undo, chat can continue normally.
+Each AI message has an **Undo** button. Clicking it:
+- Reverts the most recent change (restores previous `designJson`)
+- Adds a system message: "Undone — reverted to previous state"
+- Chirality: user can also type "undo" in chat and get the same result
+
+Undo history stores the last 10 states in Convex (`profileDesign.changeHistory`).
+
+### What the AI Can Change
+
+Hardcoded in the system prompt:
+
+| Property | Examples |
+|----------|----------|
+| Tagline | "building things that feel alive" |
+| Bio text | Free-text description |
+| Accent colors | Within the approved dark palette |
+| Card layout density | 2-col, 3-col, tighter spacing |
+| Repo visibility | Show/hide specific repos |
+| Social links | Add/remove GitHub, Twitter, email |
+| OG title + description | What shows when shared on X |
+
+**What the AI cannot change:** Individual pixel layout, custom CSS, arbitrary fonts, colors outside the approved palette, anything not in this list.
+
+If the user asks for something outside the allowed surface, the AI responds politely declining and suggests something in-bounds:
+
+> "I can adjust the tagline, bio, colors, and which projects show — but I can't change individual layout details like card order or font sizes. Want me to adjust one of those instead?"
 
 ---
 
-## 5. Preview Controls
+## 6. AI Constraints Architecture
 
-### Live / Preview Toggle
+**Combination approach.** System prompt defines the structural constraints — what the AI is and isn't allowed to do, how to interpret commands, and the tone of responses.
 
-A toggle in the chat panel header: **Live** / **Preview only**.
+**Convex field** (`profileDesign.designJson`) stores the current page state — current values of all editable properties. This is passed to the AI on every message so it always has accurate context about what the page looks like right now.
 
-- **Live mode (default):** Changes from the AI apply immediately to the profile preview.
-- **Preview only mode:** Changes are staged but not applied. A badge on the preview says "Previewing changes". A "Apply all" button appears in the panel.
-
-The toggle is always visible in the panel header, not buried in settings.
-
-### Why Not Auto-Apply Everything?
-
-"Live by default" sounds frictionless, but creates anxiety — users feel in permanent draft mode with no safety net. The toggle gives both: a fast, fluid experience for confident users, and a "hold on" mode for indecisive moments without requiring explicit confirmation on every change.
+**Data flow per message:**
+```
+User message → Convex action → system prompt (with current designJson) →
+Claude API → response + updated designJson → save to Convex → profile updates
+```
 
 ---
 
-## 6. What the Chat Can Change
+## 7. Data Model
 
-### Editable Properties (via natural language)
+### `profileDesign` additions
 
-- **Tagline** — short phrase below display name
-- **Bio text** — free text in the bio card
-- **Repo visibility** — show/hide specific repos from the grid
-- **Accent color** — within the dark palette (no bright colors)
-- **Card layout density** — compact vs. spacious
-- **Social links** — which links to display and their order
-- **Project order** — which repos appear first
-- **OG title and description**
+```typescript
+// Existing fields (Phase 1)
+designJson: string  // serialized DesignState
+chatHistory: string  // serialized conversation messages
 
-### Not Editable via Chat
+// New fields (Phase 2)
+changeHistory: string[]  // array of prior designJson snapshots (max 10)
+lastChangeAt: number      // timestamp of last change
+presetId: string | null // which preset is currently applied
+```
 
-- Pixel-level positioning or sizing
-- Individual animation timing
-- Custom code or HTML injection
+### `designJson` shape
 
-### Rollback
-
-If a change produces an error or unexpected result, the system rolls back to the last known good state and shows: "That didn't work — reverted to your last design."
-
----
-
-## 7. First Draft Generation
-
-When a new vibecoder signs in, the system:
-1. Fetches their public GitHub repos (sorted by last push).
-2. Picks top 3 repos as the initial grid.
-3. Suggests a tagline from README content (first line of README, cleaned).
-4. Sets language tags from repo metadata.
-5. Applies a baseline "Clean Dev" style as the starting point.
-
-The vibecoder sees their real work in their real portfolio immediately — not a blank slate.
+```typescript
+interface DesignState {
+  tagline: string;
+  bio: string;
+  accentColor: string;       // hex, within approved palette
+  layoutDensity: 'compact' | 'normal' | 'spacious';
+  visibleRepoIds: string[];  // which repos to show
+  socialLinks: {
+    github?: string;
+    twitter?: string;
+    email?: string;
+  };
+  ogTitle: string;
+  ogDescription: string;
+}
+```
 
 ---
 
-## 8. Component Inventory
+## 8. Components
 
-### ChatPanel
-- Full-height right pane, fixed width
-- Contains: Header, MessageThread, StatusIndicator, ChatInput
-- Manages conversation state (messages[], isProcessing, previewMode)
+### `ChatPanel`
+- Slide-in panel, fixed to right 40% of screen
+- Manages conversation state, AI API calls, auto-save
 
-### MessageThread
-- Scrollable list of messages
-- Auto-scrolls to bottom on new message
-- Stagger-reveal animation on new AI messages (fade + slide up, 200ms)
+### `MessageBubble`
+- Renders user / AI / system message variants
+- AI variant includes Undo button
 
-### ChatMessage
-- Variant: user | ai | system
-- AI messages show avatar initial (✦)
-- Supports inline markdown rendering
-- Undo link appears below AI responses (appears for 30 seconds after response)
+### `TypingIndicator`
+- Three-dot pulse, shown while AI is responding
 
-### StatusIndicator
-- Shown when isProcessing = true
-- Replace send button with animated "..." dots
-- Sub-label: "tuning tagline...", "updating card layout..."
+### `PresetSelector`
+- Shown on first run, before chat opens
+- Three thumbnail cards with live mini-previews
+- Single-click applies and transitions to chat
 
-### ChatInput
-- Textarea (auto-grows up to 3 lines)
-- Submit on Enter (Shift+Enter for newline)
-- Disabled + placeholder when processing
-- Send button (arrow icon) disabled when empty
+### `ChatInput`
+- Text input with send button
+- Keyboard accessible (Enter to send)
+- Clears on send, disabled while AI is typing
 
-### PresetSelector
-- Horizontal card layout
-- Visual preview on each card (simplified portfolio thumbnail)
-- Label + short description per preset
-- "Skip" option to continue with auto-draft
-
-### PreviewToggle
-- In panel header: "Live" | "Preview only"
-- Pill-style toggle with visual indicator of current mode
+### `ChatDesignerToggle`
+- "Edit Portfolio" button on profile page (authenticated, own page only)
+- Collapses/expands the split-screen layout
 
 ---
 
-## 9. Technical Approach
+## 9. Technical Notes
 
-### Frontend
-- React with `useReducer` for conversation state machine
-- Framer Motion for message entrance animations
-- CSS Modules for all panel styling
-- No external chat/AI SDK — AI via Convex server actions calling Claude API
-
-### Backend (Convex Server Actions)
-- `chat.sendMessage` — receives user message, calls Claude API, returns design patch
-- `chat.applyDesign` — persists a design patch to the user's `profileDesign` table
-- `chat.generateFirstDraft` — triggered on first login, runs the GitHub fetch + draft generation
-- `chat.undoLastChange` — reverts to the previous designJson state
-
-### Design State
-- `profileDesign.designJson` is a JSON blob: `{ colors, layout, motion, repoVisibility[], socialOrder[] }`
-- On each design patch, the previous state is snapshot'd for undo before the new state is applied
-- All changes auto-save — no explicit save button
-
-### AI Prompting
-- System prompt: role = "mixmomnt design assistant", knowledge = full design spec, constraint = "only edit the properties listed in the editable properties section"
-- Conversation history passed in full (up to last 20 messages)
-- Response format: `{ changes: DesignPatch, explanation: string }`
-- DesignPatch schema validated before applying
-
----
-
-## 10. Open Questions
-
-- **Max message history:** How far back does the AI remember? 20 messages seems reasonable — too far and costs + latency grow, too short and context is lost. Flagged for user decision.
-- **Rate limiting:** If a user sends rapid messages while input is unlocked (after processing), should we queue or drop duplicates? Suggested: queue with max depth of 1 (drop if one is pending).
-- **Preset thumbnails:** Should preset cards show real thumbnail previews or simplified wireframes? Wireframes are cheaper and sufficient — real thumbnails require rendering pipeline.
-
----
-
-*Design confirmed with user. Implementation plan to follow.*
+- **No streaming yet:** AI responses arrive as complete messages (no token-by-token streaming in v1). Typing indicator shown while waiting.
+- **Debounced auto-save:** `designJson` saves to Convex with a 500ms debounce to avoid excessive writes during rapid changes.
+- **Error handling:** If the AI call fails, show an error message in chat ("Sorry, something went wrong. Try again.") and retain the user's last message.
+- **Reduced motion:** All panel animations respect `prefers-reduced-motion`.
+- **Mobile:** On screens below 768px, the chat panel takes the full screen when opened (overlays the profile). Profile is not visible in split while panel is open on mobile.
