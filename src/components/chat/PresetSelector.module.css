@@ -1,0 +1,114 @@
+.container {
+  padding: var(--space-6) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: 100%;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
+}
+
+.title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ── Preset cards grid ──────────────────────────────── */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  font-family: inherit;
+  color: inherit;
+}
+
+.card:hover {
+  border-color: var(--text-muted);
+  background: var(--surface-raised);
+}
+
+/* ── Mini wireframe preview ─────────────────────────── */
+.preview {
+  width: 64px;
+  height: 52px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.previewAvatar {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--accent, var(--text-muted));
+  margin-bottom: 2px;
+}
+
+.previewLine {
+  height: 4px;
+  background: var(--surface-raised);
+  border-radius: 2px;
+}
+
+.previewGrid {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+  flex: 1;
+  align-items: flex-end;
+}
+
+.previewCard {
+  flex: 1;
+  height: 10px;
+  background: var(--surface-raised);
+  border-radius: 2px;
+}
+
+/* ── Card body ─────────────────────────────────────── */
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardLabel {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cardDesc {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.4;
+}
