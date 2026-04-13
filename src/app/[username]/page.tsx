@@ -3,6 +3,7 @@ import HeroSection from '@/components/profile/HeroSection';
 import ProjectGrid from '@/components/profile/ProjectGrid';
 import SocialLinks from '@/components/profile/SocialLinks';
 import EmptyState from '@/components/profile/EmptyState';
+import ChatDesignerToggle from '@/components/chat/ChatDesignerToggle';
 import styles from './page.module.css';
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
@@ -142,16 +143,21 @@ export default async function ProfilePage(
   const hasProjects = MOCK_PROJECTS.length > 0;
 
   return (
-    <main className={styles.page}>
-      {hasProjects ? (
-        <>
-          <HeroSection profile={profile} />
-          <ProjectGrid projects={MOCK_PROJECTS} />
-          <SocialLinks links={MOCK_SOCIAL_LINKS} />
-        </>
-      ) : (
-        <EmptyState username={username} />
-      )}
-    </main>
+    <>
+      <main className={styles.page}>
+        {hasProjects ? (
+          <>
+            <HeroSection profile={profile} />
+            <ProjectGrid projects={MOCK_PROJECTS} />
+            <SocialLinks links={MOCK_SOCIAL_LINKS} />
+          </>
+        ) : (
+          <EmptyState username={username} />
+        )}
+      </main>
+      {/* Chat Designer — shown when viewing own profile.
+          isOwnProfile will be: username === authenticatedUsername (wired via Convex auth in future) */}
+      <ChatDesignerToggle isOwnProfile={true} />
+    </>
   );
 }
