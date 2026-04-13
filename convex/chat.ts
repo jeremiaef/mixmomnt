@@ -248,7 +248,10 @@ export const applyDesign = mutation({
     );
     if (changeHistory.length > 10) changeHistory.pop();
 
-    const newDesign = applyDesignPatch(currentDesign, args.patch);
+    const newDesign = applyDesignPatch(
+      currentDesign,
+      args.patch as Partial<DesignState>
+    );
 
     const lastUserMsg = args.chatHistory
       .filter((m) => m.role === "user")
