@@ -22,6 +22,15 @@ function subdomainRouter(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Vercel preview URL: mixmomnt-xxxx.vercel.app — treat as root app, not a username
+  if (hostname.endsWith(".vercel.app") || hostname.endsWith(".vercel.sh")) {
+    const cleanHost = hostname.split(".")[0]; // e.g. "mixmomnt-xxxx"
+    // If the first part contains a hyphen, it's a deployment hash — not a username
+    if (cleanHost.includes("-")) {
+      return NextResponse.next();
+    }
+  }
+
   const isLocalhost = hostname.includes("localhost:3000");
 
   if (isLocalhost) {
