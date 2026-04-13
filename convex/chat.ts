@@ -122,39 +122,45 @@ export const sendMessage = action({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const apiKey = process.env.CLAUDE_API_KEY;
-    if (!apiKey) throw new Error("CLAUDE_API_KEY not set");
+    const apiKey = process.env.MINIMAX_API_KEY;
+    if (!apiKey) throw new Error("MINIMAX_API_KEY not set");
 
     const recentHistory = args.chatHistory.slice(-20).map((m) => ({
       role: m.role === "ai" ? "assistant" : "user",
       content: m.content,
     }));
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1024,
-        system: AI_SYSTEM_PROMPT,
-        messages: [...recentHistory, { role: "user", content: args.message }],
-      }),
-    });
+    const response = await fetch(
+      "https://api.minimax.chat/v1/text/chatcompletion_v2",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "MiniMax-Text-01",
+          max_tokens: 1024,
+          messages: [
+            { role: "system", content: AI_SYSTEM_PROMPT },
+            ...recentHistory,
+            { role: "user", content: args.message },
+          ],
+        }),
+      }
+    );
 
     if (!response.ok) {
       const err = await response.text();
-      throw new Error(`Claude API error: ${response.status} — ${err}`);
+      throw new Error(`MiniMax API error: ${response.status} — ${err}`);
     }
 
     const data = (await response.json()) as {
-      content?: { text?: string }[];
+      choices?: { message?: { content?: string } }[];
     };
     const responseText =
-      data.content?.[0]?.text?.trim() ?? "Sorry, I couldn't process that.";
+      data.choices?.[0]?.message?.content?.trim() ??
+      "Sorry, I couldn't process that.";
 
     let patch: Partial<DesignState> = {};
     let explanation = responseText;
