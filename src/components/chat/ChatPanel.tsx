@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { X } from 'lucide-react';
-import { useQuery, useMutation } from 'convex/react';
+import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { ChatMessage } from '@/lib/design';
 import MessageBubble from './MessageBubble';
@@ -110,7 +110,7 @@ interface ChatPanelProps {
 
 export default function ChatPanel({ onClose }: ChatPanelProps) {
   const designData = useQuery(api.chat.getDesign);
-  const sendMessageMutation = useMutation(api.chat.sendMessage);
+  const sendMessageAction = useAction(api.chat.sendMessage);
   const applyDesignMutation = useMutation(api.chat.applyDesign);
   const applyPresetMutation = useMutation(api.chat.applyPreset);
   const undoMutation = useMutation(api.chat.undo);
@@ -161,7 +161,7 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
 
       dispatch({ type: 'AI_STARTED' });
 
-      const result = await sendMessageMutation({
+      const result = await sendMessageAction({
         message: content,
         designJson: currentDesignJson,
         chatHistory: currentMessages,
