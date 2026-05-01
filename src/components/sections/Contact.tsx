@@ -25,7 +25,7 @@ export function Contact() {
     const body = encodeURIComponent(
       `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
     );
-    window.location.href = `mailto:hello@mixmomnt.dev?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:jeremia@meetstabl.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -103,10 +103,10 @@ export function Contact() {
                 <div className="flex items-center gap-3 text-slate-600">
                   <Mail className="h-5 w-5 text-indigo-600" />
                   <a
-                    href="mailto:hello@mixmomnt.dev"
+                    href="mailto:jeremia@meetstabl.com"
                     className="hover:text-indigo-600"
                   >
-                    hello@mixmomnt.dev
+                    jeremia@meetstabl.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600">

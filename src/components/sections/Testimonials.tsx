@@ -5,25 +5,25 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 const testimonials = [
   {
     quote:
-      "Alex transformed our online presence. The attention to detail and creativity exceeded all expectations. Highly recommended!",
+      "meetstabl helped me cut my unnecessary spending by 30% in the first month. The AI alerts are genuinely life-changing.",
     name: "Sarah",
-    role: "Startup Founder",
+    role: "Freelance Designer",
     initials: "SJ",
     color: "bg-emerald-500",
   },
   {
     quote:
-      "The attention to detail and speed of delivery was outstanding. Working with mixmomnt was a game changer for our product.",
+      "Finally a finance app that doesn't just track — it actually prevents me from going over budget. Brilliant concept.",
     name: "Marcus",
-    role: "Product Manager",
+    role: "Music Producer",
     initials: "MW",
     color: "bg-blue-500",
   },
   {
     quote:
-      "mixmomnt delivered beyond expectations. Our new website has significantly improved user engagement and conversions.",
+      "As someone who struggles with overspending, meetstabl's AI guardrails have given me real control over my finances.",
     name: "Priya",
-    role: "Creative Director",
+    role: "Sound Engineer",
     initials: "PK",
     color: "bg-amber-500",
   },
@@ -35,7 +35,7 @@ export function Testimonials() {
       <Container>
         <SectionHeading
           title="What People Say"
-          subtitle="Kind words from clients and collaborators I've had the pleasure of working with."
+          subtitle="Early users share how meetstabl is helping them take control of their spending."
         />
         <div className="grid gap-8 md:grid-cols-3">
           {testimonials.map((t) => (

@@ -1,55 +1,55 @@
-import { Code, Palette, Lightbulb, MessageSquare } from "lucide-react";
+import { Shield, BarChart3, Target, Zap } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-const services = [
+const features = [
   {
-    icon: Code,
-    title: "Web Development",
+    icon: Shield,
+    title: "AI Overspend Guard",
     description:
-      "Building fast, responsive websites with modern technologies that perform and scale.",
+      "Built-in AI analyzes your spending patterns in real-time and alerts you before you overspend.",
   },
   {
-    icon: Palette,
-    title: "UI/UX Design",
+    icon: BarChart3,
+    title: "Smart Budget Tracking",
     description:
-      "Crafting intuitive interfaces that delight users and drive engagement.",
+      "Automatically categorize transactions and visualize where your money goes with beautiful charts.",
   },
   {
-    icon: Lightbulb,
-    title: "Brand Strategy",
+    icon: Target,
+    title: "Financial Goals",
     description:
-      "Helping brands tell their story visually and connect with their audience.",
+      "Set savings targets and track progress with intelligent reminders that keep you on course.",
   },
   {
-    icon: MessageSquare,
-    title: "Consulting",
+    icon: Zap,
+    title: "Real-time Insights",
     description:
-      "Technical guidance and creative direction for your next digital product.",
+      "Get instant notifications and actionable insights to make smarter financial decisions every day.",
   },
 ];
 
 export function Services() {
   return (
-    <section id="services" className="bg-white py-20 sm:py-28">
+    <section id="product" className="bg-white py-20 sm:py-28">
       <Container>
         <SectionHeading
-          title="What I Do"
-          subtitle="A range of services to help you build, launch, and grow your digital presence."
+          title="Why meetstabl?"
+          subtitle="A finance tracker designed to keep you in control — powered by AI that actually helps."
         />
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service) => (
+          {features.map((feature) => (
             <div
-              key={service.title}
+              key={feature.title}
               className="group rounded-2xl bg-slate-50 p-8 transition-all hover:-translate-y-1 hover:shadow-lg"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white">
-                <service.icon className="h-6 w-6" />
+                <feature.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-6 text-lg font-semibold text-slate-900">
-                {service.title}
+                {feature.title}
               </h3>
-              <p className="mt-3 text-slate-600">{service.description}</p>
+              <p className="mt-3 text-slate-600">{feature.description}</p>
             </div>
           ))}
         </div>
